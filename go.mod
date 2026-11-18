@@ -1,6 +1,6 @@
 module example.com/student-service
 
-go 1.24
+go 1.22
 
 require (
 	github.com/go-kit/kit v0.13.0
