@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package studentpb;
+
+option go_package = "example.com/student-service/pb";
+
+service StudentService {
+  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc GetByID(GetByIDRequest) returns (GetByIDResponse);
+  rpc ChangeGroup(ChangeGroupRequest) returns (ChangeGroupResponse);
+}
+
+message Student {
+  string id          = 1;
+  string full_name   = 2;
+  string group_name  = 3;
+  float  gpa         = 4;
+  int64  enrolled_on = 5;
+}
+
+message CreateRequest {
+  string full_name  = 1;
+  string group_name = 2;
+  float  gpa        = 3;
+}
+
+message CreateResponse {
+  string id    = 1;
+  string error = 2;
+}
+
+message GetByIDRequest {
+  string id = 1;
+}
+
+message GetByIDResponse {
+  Student student = 1;
+  string  error   = 2;
+}
+
+message ChangeGroupRequest {
+  string id         = 1;
+  string group_name = 2;
+}
+
+message ChangeGroupResponse {
+  string error = 1;
+}
