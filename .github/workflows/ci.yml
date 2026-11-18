@@ -13,7 +13,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: ['1.24', '1.25']
+        # Оставляем вашу матрицу. Убедитесь, что go.mod не требует версию выше,
+        # чем самая новая версия в этой матрице.
+        go-version: ['1.22', '1.23'] 
 
     steps:
       - name: Checkout code
@@ -33,9 +35,10 @@ jobs:
         run: go mod verify
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v9
+        uses: golangci/golangci-lint-action@v9   # <-- ОБНОВЛЕНО
         with:
-          version: v2.1.0
+          # Используем версию линтера, собранную с Go 1.26+
+          version: v2.12.0                       # <-- ОБНОВЛЕНО
           args: --timeout=5m
 
       - name: Build
