@@ -4,17 +4,17 @@ import (
 	"flag"
 	"fmt"
 	"net"
-	"net/http" // стандартный пакет — остаётся "http"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log"       // <-- ИСПРАВЛЕНО
+	"github.com/go-kit/log/level" // <-- ИСПРАВЛЕНО
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	httptransport "example.com/student-service/http" // ← алиас для локального пакета
+	httptransport "example.com/student-service/http"
 	"example.com/student-service/implementation"
 	"example.com/student-service/pb"
 	"example.com/student-service/repository"
