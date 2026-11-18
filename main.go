@@ -44,14 +44,14 @@ func main() {
 	svc := implementation.NewService(repo, logger)
 	endpoints := transport.MakeEndpoints(svc)
 
-	// --- HTTP-транспорт (используем алиас httptransport) ---
+	// --- HTTP-транспорт ---
 	httpHandler := httptransport.NewService(endpoints, logger)
 
 	// --- gRPC-транспорт ---
 	grpcServer := grpctransport.NewGRPCServer(endpoints)
 	grpcBaseServer := grpc.NewServer()
 	pb.RegisterStudentServiceServer(grpcBaseServer, grpcServer)
-	reflection.Register(grpcBaseServer) // для grpcurl list/describe без proto-файла
+	reflection.Register(grpcBaseServer) 
 
 	errs := make(chan error, 1)
 
@@ -65,19 +65,20 @@ func main() {
 	// Запуск gRPC на :9090
 	grpcListener, err := net.Listen("tcp", *grpcAddr)
 	if err != nil {
-		level.Error(logger).Log("during", "listen grpc", "err", err)
+		_ = level.Error(logger).Log("during", "listen grpc", "err", err) // <-- ИСПРАВЛЕНО
 		os.Exit(1)
 	}
 	go func() {
-		level.Info(logger).Log("transport", "gRPC", "addr", *grpcAddr)
+		_ = level.Info(logger).Log("transport", "gRPC", "addr", *grpcAddr) // <-- ИСПРАВЛЕНО
 		errs <- grpcBaseServer.Serve(grpcListener)
 	}()
 
 	// Запуск HTTP на :8080
 	go func() {
-		level.Info(logger).Log("transport", "HTTP", "addr", *httpAddr)
+		_ = level.Info(logger).Log("transport", "HTTP", "addr", *httpAddr) // <-- ИСПРАВЛЕНО
 		errs <- http.ListenAndServe(*httpAddr, httpHandler)
 	}()
 
-	level.Error(logger).Log("exit", <-errs)
+	// Тоже добавляем _ = на всякий случай, чтобы линтер не ругался на последнюю строку
+	_ = level.Error(logger).Log("exit", <-errs) 
 }
