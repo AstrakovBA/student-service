@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log" // <-- ИСПРАВЛЕНО: убран /kit/
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 
@@ -76,5 +76,5 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusInternalServerError)
-	json.NewEncoder(w).Encode(map[string]interface{}{"error": err.Error()})
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{"error": err.Error()}) // <-- ИСПРАВЛЕНО: добавлено _ =
 }
