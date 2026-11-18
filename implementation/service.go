@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log"       // <-- ИСПРАВЛЕНО
+	"github.com/go-kit/log/level" // <-- ИСПРАВЛЕНО
 	"github.com/google/uuid"
 
 	"example.com/student-service/student"
@@ -32,7 +32,7 @@ func (s *service) Create(ctx context.Context, st student.Student) (string, error
 	st.EnrolledOn = time.Now().Unix()
 
 	if err := s.repository.CreateStudent(ctx, st); err != nil {
-		level.Error(logger).Log("err", err)
+		_ = level.Error(logger).Log("err", err) // <-- ИСПРАВЛЕНО: добавлено _ =
 		return "", student.ErrCmdRepository
 	}
 
@@ -44,7 +44,7 @@ func (s *service) GetByID(ctx context.Context, id string) (student.Student, erro
 
 	st, err := s.repository.GetStudentByID(ctx, id)
 	if err != nil {
-		level.Error(logger).Log("err", err)
+		_ = level.Error(logger).Log("err", err) // <-- ИСПРАВЛЕНО: добавлено _ =
 		return st, student.ErrStudentNotFound
 	}
 
@@ -55,7 +55,7 @@ func (s *service) ChangeGroup(ctx context.Context, id string, group string) erro
 	logger := log.With(s.logger, "method", "ChangeGroup")
 
 	if err := s.repository.ChangeStudentGroup(ctx, id, group); err != nil {
-		level.Error(logger).Log("err", err)
+		_ = level.Error(logger).Log("err", err) // <-- ИСПРАВЛЕНО: добавлено _ =
 		return student.ErrCmdRepository
 	}
 
