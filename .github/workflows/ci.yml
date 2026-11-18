@@ -13,9 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Оставляем вашу матрицу. Убедитесь, что go.mod не требует версию выше,
-        # чем самая новая версия в этой матрице.
-        go-version: ['1.22', '1.23'] 
+        go-version: ['1.22', '1.23']
 
     steps:
       - name: Checkout code
@@ -30,22 +28,31 @@ jobs:
 
       - name: Download dependencies
         run: go mod download
+        env:
+          GOTOOLCHAIN: local   # <-- ДОБАВЛЕНО
 
       - name: Verify dependencies
         run: go mod verify
+        env:
+          GOTOOLCHAIN: local   # <-- ДОБАВЛЕНО
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v9   # <-- ОБНОВЛЕНО
+        uses: golangci/golangci-lint-action@v9
         with:
-          # Используем версию линтера, собранную с Go 1.26+
-          version: v2.12.0                       # <-- ОБНОВЛЕНО
+          version: v2.12.0
           args: --timeout=5m
+        env:
+          GOTOOLCHAIN: local   # <-- ДОБАВЛЕНО
 
       - name: Build
         run: go build -v ./...
+        env:
+          GOTOOLCHAIN: local   # <-- ДОБАВЛЕНО
 
       - name: Run tests
         run: go test -v -race -coverprofile=coverage.out ./...
+        env:
+          GOTOOLCHAIN: local   # <-- ДОБАВЛЕНО
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
